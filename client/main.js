@@ -1,8 +1,16 @@
-import { Template } from 'meteor/templating';
-import { ReactiveVar } from 'meteor/reactive-var';
+import React from 'react';
+import { Meteor } from 'meteor/meteor';
+import { render } from 'react-dom';
 
+import App from '../imports/ui/App.js';
+
+Meteor.startup(() => {
+  render(<App />, document.getElementById('render-target'));
+});
+
+/*
 import './main.html';
-import './views/comments/comments.html'
+import './views/comments/comments.html';
 
 Template.hello.onCreated(function helloOnCreated() {
   // counter starts at 0
@@ -21,3 +29,4 @@ Template.hello.events({
     instance.counter.set(instance.counter.get() + 1);
   },
 });
+*/
