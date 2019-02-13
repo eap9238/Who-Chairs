@@ -2,6 +2,7 @@
   <title>who-chairs</title>
      <meta name="google-signin-scope" content="profile email">
     <meta name="google-signin-client_id" content="963060634925-n06db9kgl9qculfbvfsdnm0r21hflquf.apps.googleusercontent.com">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://apis.google.com/js/platform.js" async defer></script>
 </head>
 
@@ -32,6 +33,7 @@
 
   {{> hello}}
   {{> info}}
+  {{> upload}}
 </body>
 
 <template name="hello">
@@ -47,4 +49,65 @@
     <li><a href="https://docs.meteor.com" target="_blank">Read the Docs</a></li>
     <li><a href="https://forums.meteor.com" target="_blank">Discussions</a></li>
   </ul>
+</template>
+
+<template name="upload">    
+    <script>
+        /*
+        function upload(input) {
+            
+            if (input.files && input.files[0]) {
+            
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    var x = document.createElement("IMG");
+                    x.setAttribute("src", e.target.result);
+                    x.setAttribute("width", "304");
+                    x.setAttribute("height", "228");
+                    x.setAttribute("alt", "Uploaded Image");
+                    document.body.appendChild(x);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#imgUpload").change(function() {
+            upload(this);
+        });
+        */
+
+        /*
+        console.log(document.URL);
+        
+        // Retrieve
+        var MongoClient = require('mongodb').MongoClient;
+        
+        // Connect to the db
+        MongoClient.connect("mongodb://" + document.URL, function(err, db) {
+            if(!err) {
+                console.log("We are connected");
+            } else {
+                console.log(err);
+            }
+        });
+        */
+        
+        var loadFile = function(event) {
+            var x = document.createElement("IMG");
+            x.setAttribute("src", URL.createObjectURL(event.target.files[0]));
+            x.setAttribute("alt", "Uploaded Image");
+            document.body.appendChild(x);
+        };
+    </script>
+    
+    <div> 
+        <form>
+            <input id="imgUpload" type="file" name="filename" accept="image/*" onchange="loadFile(event)"/>
+            <!-- <input type="submit" /> -->
+        </form>
+        
+    </div>
+        
 </template>
