@@ -11,3 +11,5 @@ Inside the repo, run the following commands:
 `meteor add accounts-ui`
 
 `meteor add accounts-google`
+
+`meteor google-config-ui`
