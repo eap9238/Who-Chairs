@@ -1,15 +1,15 @@
 <head>
   <title>who-chairs</title>
      <meta name="google-signin-scope" content="profile email">
-    <meta name="google-signin-client_id" content="963060634925-n06db9kgl9qculfbvfsdnm0r21hflquf.apps.googleusercontent.com">
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
+     <meta name="google-signin-client_id" content="963060634925-n06db9kgl9qculfbvfsdnm0r21hflquf.apps.googleusercontent.com">
+     <script src="https://apis.google.com/js/platform.js" async defer></script>
 </head>
 
 <body>
     <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
     <div id="response" class="hide">
         <textarea id="responseContainer" style="width:100%; height:150px"></textarea>
-      </div>
+    </div>
     <script>
       function onSignIn(googleUser) {
         // Useful data for your client-side scripts:
@@ -28,9 +28,8 @@
         profile.getName();
       }
     </script>
-  <h1>Welcome to Meteor!</h1>
+    <h1>Welcome to Meteor!</h1>
+    <div id="render-target"></div>
 
-  {{> hello}}
-  {{> info}}
-  <div id="render-target"></div>
+
 </body>
