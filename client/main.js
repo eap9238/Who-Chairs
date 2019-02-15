@@ -24,6 +24,7 @@ Template.hello.events({
 
 Template.body.helpers({
     user (){
+        console.log(Meteor.user());
         return Meteor.user();
     },
 });
