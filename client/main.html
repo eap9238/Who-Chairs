@@ -4,6 +4,25 @@
     <meta name="google-signin-client_id" content="963060634925-n06db9kgl9qculfbvfsdnm0r21hflquf.apps.googleusercontent.com">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://apis.google.com/js/platform.js" async defer></script>
+    
+    <script>
+
+        var loadFile = function(event) {
+            console.log("Place image in temporary memory");
+            var x = document.createElement("IMG");
+            x.setAttribute("src", URL.createObjectURL(event.target.files[0]));
+            x.setAttribute("alt", "Uploaded Image");
+            document.body.appendChild(x);
+            return;
+        };
+
+        var sendToServer = function(file) {
+            console.log("Place image in long-term memory");
+            console.log(document.getElementById("imgUpload").value);
+            return;
+        };
+
+    </script>
 </head>
 
 <body>
@@ -52,60 +71,11 @@
 </template>
 
 <template name="upload">    
-    <script>
-        /*
-        function upload(input) {
-            
-            if (input.files && input.files[0]) {
-            
-                var reader = new FileReader();
-
-                reader.onload = function(e) {
-                    var x = document.createElement("IMG");
-                    x.setAttribute("src", e.target.result);
-                    x.setAttribute("width", "304");
-                    x.setAttribute("height", "228");
-                    x.setAttribute("alt", "Uploaded Image");
-                    document.body.appendChild(x);
-                }
-
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        $("#imgUpload").change(function() {
-            upload(this);
-        });
-        */
-
-        /*
-        console.log(document.URL);
-        
-        // Retrieve
-        var MongoClient = require('mongodb').MongoClient;
-        
-        // Connect to the db
-        MongoClient.connect("mongodb://" + document.URL, function(err, db) {
-            if(!err) {
-                console.log("We are connected");
-            } else {
-                console.log(err);
-            }
-        });
-        */
-        
-        var loadFile = function(event) {
-            var x = document.createElement("IMG");
-            x.setAttribute("src", URL.createObjectURL(event.target.files[0]));
-            x.setAttribute("alt", "Uploaded Image");
-            document.body.appendChild(x);
-        };
-    </script>
     
     <div> 
-        <form>
-            <input id="imgUpload" type="file" name="filename" accept="image/*" onchange="loadFile(event)"/>
-            <!-- <input type="submit" /> -->
+        <form type="multipart/form-data" method="post" onsubmit="sendToServer(this)">            
+            <input id="imgUpload" type="file" accept="image/*" onchange="loadFile(event)"/>
+            <input type="submit"/>
         </form>
         
     </div>
