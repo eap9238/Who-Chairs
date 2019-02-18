@@ -17,7 +17,7 @@
         };
         
         var loadPreview = function(event) {
-            var x = document.getEleamentById("Preview");
+            var x = document.getElementById("Preview");
             x.setAttribute("src", URL.createObjectURL(event.target.files[0]));
             x.setAttribute("alt", "Uploaded Image");
         };
@@ -81,7 +81,7 @@
     <div> 
         <form>
             <input id="imgUpload" type="file" name="filename" accept="image/*" onchange="loadPreview(event)"/>
-            <img id="Preview" src="Assets/Preview-Icon.png" alt="Image Preview"></img>
+            <img id="Preview" src="assets/Preview-icon.png" alt="Image Preview"/>
 			<!-- <input type="submit" /> -->
         </form>
     </div>
