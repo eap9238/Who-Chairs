@@ -1,15 +1,5 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <style>
-      #map {
-        height: 800px;
-        width: 100%;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="map"></div>
+<template name="map">
+    <div class="container" id="map" height="800px" width="100%"></div>
     <script>
 		// The map
 		var map;
@@ -81,5 +71,4 @@
     <script async defer
 	    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDaSdsYHPlZp1aGqKwTvObCvoR_L7M-Zqw&callback=initMap">
     </script>
-  </body>
-</html>
+</template>
