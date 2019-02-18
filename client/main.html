@@ -1,41 +1,43 @@
 <head>
-  <title>who-chairs</title>
-     <meta name="google-signin-scope" content="profile email">
-    <meta name="google-signin-client_id" content="963060634925-n06db9kgl9qculfbvfsdnm0r21hflquf.apps.googleusercontent.com">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <title>who-chairs</title>
+
 </head>
 
 <body>
-    <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
-    <div id="response" class="hide">
-        <textarea id="responseContainer" style="width:100%; height:150px"></textarea>
-      </div>
-    <script>
-      function onSignIn(googleUser) {
-        // Useful data for your client-side scripts:
-        var profile = googleUser.getBasicProfile();
-        console.log("ID: " + profile.getId()); // Don't send this directly to your server!
-        console.log('Full Name: ' + profile.getName());
-        console.log('Given Name: ' + profile.getGivenName());
-        console.log('Family Name: ' + profile.getFamilyName());
-        console.log("Image URL: " + profile.getImageUrl());
-        console.log("Email: " + profile.getEmail());
 
-        // The ID token you need to pass to your backend:
-        var id_token = googleUser.getAuthResponse().id_token;
-        console.log("ID Token: " + id_token);
-        document.getElementById('responseContainer').value = 'Welcome,  ' +
-        profile.getName();
-      }
-    </script>
+
+  {{> NavBar }}
+
+  <div class="container">
   <h1>Welcome to Meteor!</h1>
-
   {{> hello}}
   {{> info}}
   {{> upload}}
+</div>
 </body>
 
+<template name="NavBar">
+    <nav class="navbar navbar-expand-md navbar-light bg-light">
+        <ul class=" nav navbar-nav navbar-right">
+        <li class="nav-item">
+        {{#if currentUser}}
+            {{ user.profile.name }} <img src="{{user.services.google.picture}}">
+            <button class="logout btn navbar-btn">Sign Out</button>
+        {{else}}
+            {{#if loggingIn }}
+                        <a href>
+                            Logging In...
+                        </a>
+            {{else}}
+                <a class="login btn navbar-btn btn-outline-primary">
+                    <img src="http://www.stickpng.com/assets/images/5847f9cbcef1014c0b5e48c8.png"
+                         style="height: 20px; width: 20px">  Sign In</a>
+            {{/if}}
+        {{/if}}
+        </li>
+        </ul>
+    </nav>
+</template>
 <template name="hello">
   <button>Click Me</button>
   <p>You've pressed the button {{counter}} times.</p>
