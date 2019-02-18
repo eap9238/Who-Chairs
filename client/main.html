@@ -15,6 +15,12 @@
             document.body.appendChild(x);
             return;
         };
+        
+        var loadPreview = function(event) {
+            var x = document.getEleamentById("Preview");
+            x.setAttribute("src", URL.createObjectURL(event.target.files[0]));
+            x.setAttribute("alt", "Uploaded Image");
+        };
 
         var sendToServer = function(file) {
             console.log("Place image in long-term memory");
@@ -73,11 +79,11 @@
 <template name="upload">    
     
     <div> 
-        <form type="multipart/form-data" method="post" onsubmit="sendToServer(this)">            
-            <input id="imgUpload" type="file" accept="image/*" onchange="loadFile(event)"/>
-            <input type="submit"/>
+        <form>
+            <input id="imgUpload" type="file" name="filename" accept="image/*" onchange="loadPreview(event)"/>
+            <img id="Preview" src="Assets/Preview-Icon.png" alt="Image Preview"></img>
+			<!-- <input type="submit" /> -->
         </form>
-        
     </div>
         
 </template>
