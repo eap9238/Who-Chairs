@@ -23,3 +23,9 @@ accounts-ui
 accounts-google
 google-config-ui
 service-configuration
+useraccounts:bootstrap
+bootstrap
+useraccounts:famous-wrapper
+twbs:bootstrap
+useraccounts:core
+accounts-base
