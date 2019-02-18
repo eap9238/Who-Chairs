@@ -1,6 +1,12 @@
 <template name="comments">
     <div class="container">
         <h1>please</h1>
-        <button>YIKES</button>
+        {{#autoform collection="Comments" id="comment" type="insert"}}
+        <fieldset>
+          <legend>Add a Comment</legend>
+          {{> afQuickField name='text'}}
+        </fieldset>
+        <button type="submit">YIKES</button>
+        {{/autoform}}
     </div>
 </template>
