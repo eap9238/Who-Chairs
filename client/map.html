@@ -1,15 +1,14 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <style>
-      #map {
-        height: 800px;
-        width: 100%;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="map"></div>
+<head>
+	<style>
+		#map {
+			overflow: visible;
+			height: 800px;
+			width: 100%;
+		}
+	</style>
+</head>
+<template name="map">
+    <div class="container" id="map"></div>
     <script>
 		// The map
 		var map;
@@ -78,8 +77,9 @@
             });
         }
     </script>
+	<!--TODO: Keeping the key here is EXTREMELY INSECURE. Fix this at the first available opportunity-->
+    <!--Note: this key is assigned to joekgamer@gmail.com (name "API key")-->
     <script async defer
 	    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDaSdsYHPlZp1aGqKwTvObCvoR_L7M-Zqw&callback=initMap">
     </script>
-  </body>
-</html>
+</template>
