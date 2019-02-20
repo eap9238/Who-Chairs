@@ -1,4 +1,17 @@
 body {
-  padding: 10px;
   font-family: sans-serif;
+}
+.navbar {
+  background-color: #e5e6e8;
+}
+
+.container{
+  padding: 10px;
+}
+
+img {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 30px;
+  height: 30px;
 }
