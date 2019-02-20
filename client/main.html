@@ -5,15 +5,6 @@
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     
     <script>
-
-        var loadFile = function(event) {
-            console.log("Place image in temporary memory");
-            var x = document.createElement("IMG");
-            x.setAttribute("src", URL.createObjectURL(event.target.files[0]));
-            x.setAttribute("alt", "Uploaded Image");
-            document.body.appendChild(x);
-            return;
-        };
         
         var loadPreview = function(event) {
             var x = document.getElementById("Preview");
@@ -92,8 +83,7 @@
             </div>
             <div class="right">
                 <img id="Preview" src="http://icons.iconarchive.com/icons/ccard3dev/dynamic-yosemite/128/Preview-icon.png" alt="Image Preview"/>
-            <!-- <img id="Preview" src="../assets/Preview-icon.png" alt="Image Preview"/> -->
-			<!-- <input type="submit" /> -->
+				<!-- <input type="submit" /> -->
             </div>
         </form>
     </div>
