@@ -1,0 +1,85 @@
+<head>
+	<style>
+		#map {
+			overflow: visible;
+			height: 800px;
+			width: 100%;
+		}
+	</style>
+</head>
+<template name="map">
+    <div class="container" id="map"></div>
+    <script>
+		// The map
+		var map;
+
+        // Default contents of a marker's InfoWindow
+        var dif = "\
+            <h3>Default contents</h3><br />\
+            <img src=\"test.png\"></img><br />\
+            <button type=\"button\" onclick=\"openEditWindow()\">Edit</button>\
+        ";
+        //TODO: convert from php to AJAX to remove redirect
+        var editHTML = "\
+            <form action=\"upload.php\" method=\"post\" enctype=\"multipart/form-data\">\
+            Select image to upload:\
+            <input type=\"file\" name=\"fileToUpload\" id=\"fileToUpload\">\
+            <input type=\"submit\" value=\"Upload Image\" name=\"submit\">\
+            </form>\
+        ";
+        var currentMarker;
+        var currentInfoWindow = null;
+
+        // Initialize and add the map
+        function initMap() {
+            // The location of RIT
+            var rit = {lat: 43.084752, lng: -77.676251};
+            // The map, centered at RIT
+            map = new google.maps.Map(document.getElementById('map'), {zoom: 18, center: rit});
+            // A marker, positioned at the center of the starting window
+            var marker = new google.maps.Marker({position: rit, map: map});
+            // Code to listen to a user adding a marker
+            google.maps.event.addListener(map, 'click', function(event) {
+                placeMarker(event.latLng);
+            });
+            map.data.loadGeoJson('testdata.json', {}, function(features) {
+                //TODO: should we add listeners here?
+            });
+        }
+		// Process an added marker
+		function placeMarker(location) {
+			// Create the marker
+			var marker = new google.maps.Marker({
+				position: location, 
+				map: map
+			});
+			updateMarkerInfoWindow(marker, dif);
+            //map.data.toGeoJson(function(json) { data = json; });
+		}
+		// Set the marker's InfoWindow to the provided HTML string
+		function updateMarkerInfoWindow(marker, newHTML) {
+			// When it's clicked, open the information window
+			var infowindow = new google.maps.InfoWindow({ content: newHTML });
+			google.maps.event.clearListeners(marker, 'click')
+			marker.addListener('click', function() {
+                if(!!currentInfoWindow) { currentInfoWindow.close(); }
+				infowindow.open(map, marker);
+                currentInfoWindow = infowindow;
+                currentMarker = marker;
+			});
+		}
+        function openEditWindow() {
+            currentInfoWindow.close();
+            var editInfoWindow = new google.maps.InfoWindow({ content: editHTML });
+            editInfoWindow.open(map, currentMarker);
+            editInfoWindow.addListener('closeclick', function() {
+                currentInfoWindow.open(map, currentMarker);
+            });
+        }
+    </script>
+	<!--TODO: Keeping the key here is EXTREMELY INSECURE. Fix this at the first available opportunity-->
+    <!--Note: this key is assigned to joekgamer@gmail.com (name "API key")-->
+    <script async defer
+	    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDaSdsYHPlZp1aGqKwTvObCvoR_L7M-Zqw&callback=initMap">
+    </script>
+</template>

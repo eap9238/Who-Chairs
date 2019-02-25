@@ -1,4 +1,48 @@
 body {
-  padding: 10px;
   font-family: sans-serif;
+}
+
+#Preview {
+  width: 128px;
+  height: 128px;
+}
+
+.navbar {
+  background-color: #e5e6e8;
+}
+
+.container{
+  padding: 10px;
+}
+
+img {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 30px;
+  height: 30px;
+}
+
+.imgUpload {
+    display: inline-block;
+    float: left;
+    padding-right: 10px;
+    position: relative;
+}
+
+#imgForm {
+    background-color: lightgray;
+    padding: 15px 20px;
+    margin: 10px 0;
+    box-sizing: border-box;
+    display:inline-flex;
+    border-radius: 10px;
+}
+
+#imgForm h3 {
+    margin: 5px;
+    margin-top: 10px;
+}
+
+#imgForm input {
+    margin: 5px;
 }
