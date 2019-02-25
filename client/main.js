@@ -6,6 +6,7 @@ import { AccountsTemplates } from 'meteor/useraccounts:core'
 
 
 import './main.html';
+import './map.html';
 
 Template.hello.onCreated(function helloOnCreated() {
   // counter starts at 0
