@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
+import { ReactiveDict } from 'meteor/reactive-dict';
 import { Accounts } from 'meteor/accounts-base';
 import { AccountsTemplates } from 'meteor/useraccounts:core'
 
@@ -43,5 +44,44 @@ Template.NavBar.events({
         Meteor.logout();
     }
 });
+
+Template.mapMode.onCreated(function mapModeOnCreated() {
+    this.addModeActive = new ReactiveVar(true);
+});
+
+Template.mapMode.helpers({
+    addMode() {
+        return Template.instance().addModeActive.get();
+    },
+});
+
+Template.map.helpers({
+    addMode(){
+        return Template.instance().addModeActive.get();
+    }
+});
+
+Template.mapMode.events({
+    'change #option2'(event, instance) {
+        console.log("hi");
+        instance.addModeActive.set(false);
+        console.log("Add mode :", Template.instance().addModeActive)
+    },
+    'change #option1'(event, instance) {
+        console.log("Add mode active");
+        instance.addModeActive.set(true);
+        console.log("Add mode :", Template.instance().addModeActive)
+    }
+});
+
+Template.map.onCreated(function mapModeOnCreated() {
+    var mapModeInstance = this.view.parentView.templateInstance();
+    this.addModeActive = mapModeInstance.addModeActive;
+});
+
+google.maps.event.addListener(map, 'click', function(event) {
+    placeMarker(event.latLng);
+    console.log("added");
+    });
 
 

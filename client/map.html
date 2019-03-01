@@ -8,7 +8,9 @@
 	</style>
 </head>
 <template name="map">
-    <div class="container" id="map"></div>
+    <div>Active: {{addMode}}</div>
+    <div class="container" id="map">
+    </div>
     <script>
 		// The map
 		var map;
@@ -29,7 +31,6 @@
         ";
         var currentMarker;
         var currentInfoWindow = null;
-
         // Initialize and add the map
         function initMap() {
             // The location of RIT
@@ -39,9 +40,7 @@
             // A marker, positioned at the center of the starting window
             var marker = new google.maps.Marker({position: rit, map: map});
             // Code to listen to a user adding a marker
-            google.maps.event.addListener(map, 'click', function(event) {
-                placeMarker(event.latLng);
-            });
+
             map.data.loadGeoJson('testdata.json', {}, function(features) {
                 //TODO: should we add listeners here?
             });

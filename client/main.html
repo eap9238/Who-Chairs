@@ -33,7 +33,7 @@
   {{> hello}}
   {{> info}}
   {{> upload}}
-  {{> map}}
+      {{> mapMode}}
 </div>
 </body>
 
@@ -89,4 +89,22 @@
         </form>
     </div>
         
+</template>
+
+<template name="mapMode">
+    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+        <label class="btn btn-secondary active">
+            <input type="radio" name="options" id="option1" autocomplete="off" checked> Add Chair
+        </label>
+        <label class="btn btn-secondary">
+            <input type="radio" name="options" id="option2" autocomplete="off"> Mode 2
+        </label>
+    </div>
+    {{#if addMode}}
+    Add mode active
+        {{else}}
+        Mode 2 active
+    {{/if}}
+    {{> map}}
+
 </template>
