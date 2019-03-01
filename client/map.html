@@ -18,6 +18,7 @@
             <h3>Default contents</h3><br />\
             <img src=\"test.png\"></img><br />\
             <button type=\"button\" onclick=\"openEditWindow()\">Edit</button>\
+            <button type=\"button\" onclick=\"openCommentWindow()\">Comment</button>\
         ";
         //TODO: convert from php to AJAX to remove redirect
         var editHTML = "\
@@ -25,8 +26,16 @@
             Select image to upload:\
             <input type=\"file\" name=\"fileToUpload\" id=\"fileToUpload\">\
             <input type=\"submit\" value=\"Upload Image\" name=\"submit\">\
-            </form>\
+        </form>\
         ";
+        var commentHTML = "\
+            <form action=\"upload.php\" method=\"post\" enctype\"multipart/form-data\">\
+            Add a comment:\
+            <input type=\"text\" name=\"comment\" id=\"comment\">\
+            <br>\
+            <input type=\"submit\" value=\"Submit Comment\" name=\"submit\">\
+            </form>\
+            ";
         var currentMarker;
         var currentInfoWindow = null;
 
@@ -76,6 +85,15 @@
                 currentInfoWindow.open(map, currentMarker);
             });
         }
+        function openCommentWindow() {
+            currentInfoWindow.close();
+            var editInfoWindow = new google.maps.InfoWindow({ content: commentHTML });
+            editInfoWindow.open(map, currentMarker);
+            editInfoWindow.addListener('closeclick', function() {
+                currentInfoWindow.open(map, currentMarker);
+            });
+        }
+
     </script>
 	<!--TODO: Keeping the key here is EXTREMELY INSECURE. Fix this at the first available opportunity-->
     <!--Note: this key is assigned to joekgamer@gmail.com (name "API key")-->
