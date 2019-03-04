@@ -10,13 +10,7 @@
 <template name="map">
     <div class="container" id="map"></div>
     <script>
-		// Connection to MongoDB
-		// var Db = require('meteor/mongo').Db;
-		// var Server = require('meteor/mongo').Server;
-		// var mongoclient = require('meteor/mongo').MongoClient;
-		// mongoclient.connect('mongodb://127.0.0.1:27017/geojson', function(err, db) { if(err) throw err; console.log("OK!"); });
-		//var db = new Db('meteor', new Server('localhost', 27017));
-		//const geojson_source = new Mongo.Collection('geojson');
+		// Connection to MongoDB is a global in main.js
 	
 		// The map
 		var map;
@@ -35,7 +29,6 @@
             <input type=\"submit\" value=\"Upload Image\" name=\"submit\">\
             </form>\
         ";
-        var currentMarker;
         var currentInfoWindow = null;
 
         // Initialize and add the map
@@ -50,34 +43,22 @@
             google.maps.event.addListener(map, 'click', function(event) {
                 placeMarker(event.latLng);
             });
-			// mongoclient.connect('mongodb://127.0.0.1:27017/geojson', function(err, db) {
-				// if(err) throw err;
-			// }
+			// Code to listen to a user interacting with a marker
+			map.data.addListener('click', function(event) {
+                if(!!currentInfoWindow) { currentInfoWindow.close(); }
+				currentInfowindow = event.feature.getProperty('infowindow');
+				currentInfowindow.open(map, event.latLang);
+			});
             // map.data.loadGeoJson('testdata.json', {}, function(features) {
-                // TODO: should we add listeners here?
+                //TODO: figure out how to load JSON from the database
             // });
         }
 		// Process an added marker
 		function placeMarker(location) {
 			// Create the marker
-			var marker = new google.maps.Marker({
-				position: location, 
-				map: map
-			});
-			updateMarkerInfoWindow(marker, dif);
-            //map.data.toGeoJson(function(json) { data = json; });
-		}
-		// Set the marker's InfoWindow to the provided HTML string
-		function updateMarkerInfoWindow(marker, newHTML) {
-			// When it's clicked, open the information window
-			var infowindow = new google.maps.InfoWindow({ content: newHTML });
-			google.maps.event.clearListeners(marker, 'click')
-			marker.addListener('click', function() {
-                if(!!currentInfoWindow) { currentInfoWindow.close(); }
-				infowindow.open(map, marker);
-                currentInfoWindow = infowindow;
-                currentMarker = marker;
-			});
+			var marker = map.data.add({geometry: new google.maps.Data.Point(location)});
+			marker.setProperty('infowindow', new google.maps.InfoWindow({ content: dif, position: location }));
+            map.data.toGeoJson(function(json) { console.log(json); data=json; });
 		}
         function openEditWindow() {
             currentInfoWindow.close();
