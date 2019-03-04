@@ -3,7 +3,9 @@ import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Accounts } from 'meteor/accounts-base';
 import { AccountsTemplates } from 'meteor/useraccounts:core'
+import { Mongo } from 'meteor/mongo';
 
+geojson_source = new Mongo.Collection('geojson');
 
 import './main.html';
 import './map.html';

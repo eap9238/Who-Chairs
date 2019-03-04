@@ -1,4 +1,7 @@
 import { Meteor } from 'meteor/meteor';
+import { Mongo } from 'meteor/mongo';
+
+geojson_source = new Mongo.Collection('geojson');
 
 Meteor.startup(() => {
   

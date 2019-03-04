@@ -10,6 +10,14 @@
 <template name="map">
     <div class="container" id="map"></div>
     <script>
+		// Connection to MongoDB
+		// var Db = require('meteor/mongo').Db;
+		// var Server = require('meteor/mongo').Server;
+		// var mongoclient = require('meteor/mongo').MongoClient;
+		// mongoclient.connect('mongodb://127.0.0.1:27017/geojson', function(err, db) { if(err) throw err; console.log("OK!"); });
+		//var db = new Db('meteor', new Server('localhost', 27017));
+		//const geojson_source = new Mongo.Collection('geojson');
+	
 		// The map
 		var map;
 
@@ -42,9 +50,12 @@
             google.maps.event.addListener(map, 'click', function(event) {
                 placeMarker(event.latLng);
             });
-            map.data.loadGeoJson('testdata.json', {}, function(features) {
-                //TODO: should we add listeners here?
-            });
+			// mongoclient.connect('mongodb://127.0.0.1:27017/geojson', function(err, db) {
+				// if(err) throw err;
+			// }
+            // map.data.loadGeoJson('testdata.json', {}, function(features) {
+                // TODO: should we add listeners here?
+            // });
         }
 		// Process an added marker
 		function placeMarker(location) {
