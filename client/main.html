@@ -3,9 +3,9 @@
     <meta name="google-signin-client_id" content="963060634925-n06db9kgl9qculfbvfsdnm0r21hflquf.apps.googleusercontent.com">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://apis.google.com/js/platform.js" async defer></script>
-    
+
     <script>
-        
+
         var loadPreview = function(event) {
             var x = document.getElementById("Preview");
             x.setAttribute("src", URL.createObjectURL(event.target.files[0]));
@@ -33,7 +33,9 @@
   {{> hello}}
   {{> info}}
   {{> upload}}
+  {{#if currentUser}}
   {{> map}}
+  {{/if}}
 </div>
 </body>
 
@@ -74,9 +76,9 @@
   </ul>
 </template>
 
-<template name="upload">    
-    
-    <div> 
+<template name="upload">
+
+    <div>
         <form id="imgForm">
             <div class="imgUpload">
                 <h3>Choose an image to Upload</h3>
@@ -88,5 +90,5 @@
             </div>
         </form>
     </div>
-        
+
 </template>
