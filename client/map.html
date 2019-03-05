@@ -39,8 +39,6 @@
             var rit = {lat: 43.084752, lng: -77.676251};
             // The map, centered at RIT
             map = new google.maps.Map(document.getElementById('map'), {zoom: 18, center: rit});
-            // A marker, positioned at the center of the starting window
-            //var marker = new google.maps.Marker({position: rit, map: map});
             // Code to listen to a user adding a marker
             google.maps.event.addListener(map, 'click', function(event) {
                 placeMarker(event.latLng);
