@@ -5,7 +5,7 @@ import { Accounts } from 'meteor/accounts-base';
 import { AccountsTemplates } from 'meteor/useraccounts:core'
 import { Mongo } from 'meteor/mongo';
 
-geojson_source = new Mongo.Collection('geojson');
+map_points = new Mongo.Collection('map_points');
 
 import './main.html';
 import './map.html';

@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 
-geojson_source = new Mongo.Collection('geojson');
+map_points = new Mongo.Collection('map_points');
 
 Meteor.startup(() => {
   
