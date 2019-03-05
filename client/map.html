@@ -54,6 +54,9 @@
 				infowindow.open(map, event.latLang);
 			});
 			// Load each record in the `geojson` collection
+			setTimeout(loadData, 1000);
+        }
+		function loadData() {
 			console.log("Trying to rebuild...");
 			map_points.find().forEach((point) => {
 				var data = {geometry: point.coordinates, infowindow: point.infowindow, _id: point._id};
@@ -62,14 +65,10 @@
 				var lat = parseFloat(latLngStr[0]);
 				var lng = parseFloat(latLngStr[1]);
 				data.geometry = new google.maps.LatLng(lat, lng);
-				console.log(data)
 				map.data.add(data);
 			});
 			console.log("Rebuild complete?");
-            // map.data.loadGeoJson('testdata.json', {}, function(features) {
-                //TODO: figure out how to load JSON from the database?
-            // });
-        }
+		}
 		// Process an added marker
 		function placeMarker(location) {
 			// Create the marker
