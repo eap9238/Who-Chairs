@@ -3,7 +3,9 @@ import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Accounts } from 'meteor/accounts-base';
 import { AccountsTemplates } from 'meteor/useraccounts:core'
+import { Mongo } from 'meteor/mongo';
 
+map_points = new Mongo.Collection('map_points');
 
 import './main.html';
 import './map.html';
