@@ -80,10 +80,3 @@ Template.map.onCreated(function mapModeOnCreated() {
     var mapModeInstance = this.view.parentView.templateInstance();
     this.addModeActive = mapModeInstance.addModeActive;
 });
-
-google.maps.event.addListener(map, 'click', function(event) {
-    placeMarker(event.latLng);
-    console.log("added");
-    });
-
-
