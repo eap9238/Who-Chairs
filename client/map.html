@@ -1,28 +1,33 @@
 <head>
-	<style>
-		#map {
-			overflow: visible;
-			height: 800px;
-			width: 100%;
-		}
-	</style>
+    <!--TODO: Adjust this style to actually fit on the page, once the page's format is more finalized.-->
+    <style>
+        #map {
+            overflow: visible;
+            height: 800px;
+            width: 100%;
+        }
+    </style>
 </head>
 <template name="map">
     <div class="container" id="map"></div>
     <script>
-		// Connection to MongoDB is a global in main.js
-	
-		// The map
-		var map;
+        // Connection to MongoDB is a global in main.js called map_points
+    
+        // The map
+        var map;
 
         // Default contents of a marker's InfoWindow
+        //TODO: add another button which calls something like deletePoint([id])
         var dif = "\
             <h3>Default contents</h3><br />\
             <img src=\"test.png\"></img><br />\
             <button type=\"button\" onclick=\"openEditWindow()\">Edit</button>\
         ";
-        //TODO: convert from php to AJAX to remove redirect
-		//TODO: set up to send data to the database via update on id `marker._id`
+        
+        // Form to handle submitting a new image, etc.
+        //TODO: look into just replacing the InfoWindow's contents (.setContents(...)) temporarily
+        //TODO: look into converting from php to AJAX to remove redirect
+        //TODO: set up to send data to the database via map_points.update(...) on id `marker._id`
         var editHTML = "\
             <form action=\"upload.php\" method=\"post\" enctype=\"multipart/form-data\">\
             Select image to upload:\
@@ -30,7 +35,9 @@
             <input type=\"submit\" value=\"Upload Image\" name=\"submit\">\
             </form>\
         ";
-		var currentOpenLoc = null;
+        
+        // Variables to keep track of which point the user is currently interacting with
+        var currentOpenLoc = null;
         var currentInfoWindow = null;
 
         // Initialize and add the map
@@ -40,58 +47,66 @@
             // The map, centered at RIT
             map = new google.maps.Map(document.getElementById('map'), {zoom: 18, center: rit});
             // Code to listen to a user adding a marker
-            google.maps.event.addListener(map, 'click', function(event) {
-                placeMarker(event.latLng);
-            });
-			// Code to listen to a user interacting with a marker
-			map.data.addListener('click', function(event) {
+            google.maps.event.addListener(map, 'click', function(event) { placeMarker(event.latLng); });
+            // Code to listen to a user interacting with a marker
+            map.data.addListener('click', function(event) {
+                // If the user already has an InfoWindow open, close it
+                //TODO: test this in more cases where the user closed the previous one manually
                 if(!!currentInfoWindow) { currentInfoWindow.close(); }
-				infowindow = event.feature.getProperty('infowindow');
-				currentInfoWindow = infowindow
-				currentOpenLoc = infowindow.getPosition();
-				infowindow.open(map, event.latLang);
-			});
-			// Load each record in the `geojson` collection
-			setTimeout(loadData, 1000);
+                // InfoWindow of the point the user just clicked on
+                infowindow = event.feature.getProperty('infowindow');
+                currentInfoWindow = infowindow
+                // Location that InfoWindow is to be opened
+                currentOpenLoc = infowindow.getPosition();
+                // Open the InfoWindow
+                infowindow.open(map, event.latLang);
+            });
+            // Load each record in the `geojson` collection
+            //TODO: We really should fix this to remove the blatant race condition
+            setTimeout(loadData, 1000);
         }
-		function loadData() {
-			console.log("Trying to rebuild...");
-			map_points.find().forEach((point) => {
-				var data = {geometry: point.coordinates, infowindow: point.infowindow, _id: point._id};
-				var latLngStr = data.geometry;
-				latLngStr = latLngStr.replace('(', '').split(',', 2);
-				var lat = parseFloat(latLngStr[0]);
-				var lng = parseFloat(latLngStr[1]);
-				data.geometry = new google.maps.LatLng(lat, lng);
-				map.data.add(data);
-			});
-			console.log("Rebuild complete?");
-		}
-		// Process an added marker
-		function placeMarker(location) {
-			// Create the marker
-			var marker = map.data.add({geometry: new google.maps.Data.Point(location)});
-			marker.setProperty('infowindow', new google.maps.InfoWindow({ content: dif, position: location }));
-			// Save the marker
-			response = map_points.insert({coordinates: location.toString(), infowindow: marker.getProperty('infowindow').content});
-			// The response to saving it is the marker's database ID, so add this info to the marker
-			marker.setProperty('_id', response);
-		}
-		// Opens edit window - code to interact with the data at the point.
-		//TODO: get this working
+        
+        // Load the map point data from the database
+        function loadData() {
+            map_points.find().forEach((point) => {
+                // Basic map-compatible data structure
+                var data = {geometry: point.coordinates, infowindow: point.infowindow, _id: point._id};
+                // Parse the point's location from string to map-compatible LatLng
+                var latLngStr = data.geometry;
+                latLngStr = latLngStr.replace('(', '').split(',', 2);
+                var lat = parseFloat(latLngStr[0]);
+                var lng = parseFloat(latLngStr[1]);
+                data.geometry = new google.maps.LatLng(lat, lng);
+                // Add the point to the map
+                map.data.add(data);
+            });
+        }
+        
+        // Process an added marker
+        function placeMarker(location) {
+            // Create the marker
+            var marker = map.data.add({geometry: new google.maps.Data.Point(location)});
+            marker.setProperty('infowindow', new google.maps.InfoWindow({ content: dif, position: location }));
+            // Save the marker to the database
+            response = map_points.insert({coordinates: location.toString(), infowindow: marker.getProperty('infowindow').content});
+            // The response to saving it is the marker's database ID, so add this info to the marker
+            marker.setProperty('_id', response);
+        }
+        
+        // Opens edit window - code to interact with the data at the point.
+        //TODO: reimplement this to behave without redirects, etc. (possibly look into using InfoWindow.setContents?)
         function openEditWindow() {
             currentInfoWindow.close();
             var editInfoWindow = new google.maps.InfoWindow({ content: editHTML });
             editInfoWindow.open(map, currentOpenLoc);
             editInfoWindow.addListener('closeclick', function() {
-				editInfoWindow.close()
+                editInfoWindow.close()
                 currentInfoWindow.open(map, currentOpenLoc);
             });
         }
     </script>
-	<!--TODO: Keeping the key here is EXTREMELY INSECURE. Fix this at the first available opportunity-->
-    <!--Note: this key is assigned to joekgamer@gmail.com (name "API key")-->
+    <!--TODO: Keeping the key here is EXTREMELY INSECURE. Fix this at the first available opportunity-->
     <script async defer
-	    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDaSdsYHPlZp1aGqKwTvObCvoR_L7M-Zqw&callback=initMap">
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDaSdsYHPlZp1aGqKwTvObCvoR_L7M-Zqw&callback=initMap">
     </script>
 </template>
