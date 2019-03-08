@@ -1,4 +1,7 @@
 import { Meteor } from 'meteor/meteor';
+import { Mongo } from 'meteor/mongo';
+
+map_points = new Mongo.Collection('map_points');
 
 Meteor.startup(() => {
   

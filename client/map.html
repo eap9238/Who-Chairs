@@ -12,6 +12,8 @@
     <div class="container" id="map">
     </div>
     <script>
+		// Connection to MongoDB is a global in main.js
+
 		// The map
 		var map;
 
@@ -22,6 +24,7 @@
             <button type=\"button\" onclick=\"openEditWindow()\">Edit</button>\
         ";
         //TODO: convert from php to AJAX to remove redirect
+		//TODO: set up to send data to the database via update on id `marker._id`
         var editHTML = "\
             <form action=\"upload.php\" method=\"post\" enctype=\"multipart/form-data\">\
             Select image to upload:\
@@ -29,50 +32,62 @@
             <input type=\"submit\" value=\"Upload Image\" name=\"submit\">\
             </form>\
         ";
-        var currentMarker;
+		var currentOpenLoc = null;
         var currentInfoWindow = null;
+
         // Initialize and add the map
         function initMap() {
             // The location of RIT
             var rit = {lat: 43.084752, lng: -77.676251};
             // The map, centered at RIT
             map = new google.maps.Map(document.getElementById('map'), {zoom: 18, center: rit});
-            // A marker, positioned at the center of the starting window
-            var marker = new google.maps.Marker({position: rit, map: map});
             // Code to listen to a user adding a marker
-
-            map.data.loadGeoJson('testdata.json', {}, function(features) {
-                //TODO: should we add listeners here?
+            google.maps.event.addListener(map, 'click', function(event) {
+                placeMarker(event.latLng);
             });
+			// Code to listen to a user interacting with a marker
+			map.data.addListener('click', function(event) {
+                if(!!currentInfoWindow) { currentInfoWindow.close(); }
+				infowindow = event.feature.getProperty('infowindow');
+				currentInfoWindow = infowindow
+				currentOpenLoc = infowindow.getPosition();
+				infowindow.open(map, event.latLang);
+			});
+			// Load each record in the `geojson` collection
+			setTimeout(loadData, 1000);
         }
+		function loadData() {
+			console.log("Trying to rebuild...");
+			map_points.find().forEach((point) => {
+				var data = {geometry: point.coordinates, infowindow: point.infowindow, _id: point._id};
+				var latLngStr = data.geometry;
+				latLngStr = latLngStr.replace('(', '').split(',', 2);
+				var lat = parseFloat(latLngStr[0]);
+				var lng = parseFloat(latLngStr[1]);
+				data.geometry = new google.maps.LatLng(lat, lng);
+				map.data.add(data);
+			});
+			console.log("Rebuild complete?");
+		}
 		// Process an added marker
 		function placeMarker(location) {
 			// Create the marker
-			var marker = new google.maps.Marker({
-				position: location, 
-				map: map
-			});
-			updateMarkerInfoWindow(marker, dif);
-            //map.data.toGeoJson(function(json) { data = json; });
+			var marker = map.data.add({geometry: new google.maps.Data.Point(location)});
+			marker.setProperty('infowindow', new google.maps.InfoWindow({ content: dif, position: location }));
+			// Save the marker
+			response = map_points.insert({coordinates: location.toString(), infowindow: marker.getProperty('infowindow').content});
+			// The response to saving it is the marker's database ID, so add this info to the marker
+			marker.setProperty('_id', response);
 		}
-		// Set the marker's InfoWindow to the provided HTML string
-		function updateMarkerInfoWindow(marker, newHTML) {
-			// When it's clicked, open the information window
-			var infowindow = new google.maps.InfoWindow({ content: newHTML });
-			google.maps.event.clearListeners(marker, 'click')
-			marker.addListener('click', function() {
-                if(!!currentInfoWindow) { currentInfoWindow.close(); }
-				infowindow.open(map, marker);
-                currentInfoWindow = infowindow;
-                currentMarker = marker;
-			});
-		}
+		// Opens edit window - code to interact with the data at the point.
+		//TODO: get this working
         function openEditWindow() {
             currentInfoWindow.close();
             var editInfoWindow = new google.maps.InfoWindow({ content: editHTML });
-            editInfoWindow.open(map, currentMarker);
+            editInfoWindow.open(map, currentOpenLoc);
             editInfoWindow.addListener('closeclick', function() {
-                currentInfoWindow.open(map, currentMarker);
+				editInfoWindow.close()
+                currentInfoWindow.open(map, currentOpenLoc);
             });
         }
     </script>
