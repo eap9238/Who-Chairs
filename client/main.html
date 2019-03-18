@@ -35,7 +35,6 @@
   {{> upload}}
   {{#if currentUser}}
       {{> mapMode}}
-      {{> map}}
   {{/if}}
 
 </div>
@@ -96,12 +95,14 @@
 </template>
 
 <template name="mapMode">
-    <div class="btn-group btn-group-toggle" data-toggle="buttons">
-        <label class="btn btn-secondary active">
-            <input type="radio" name="options" id="option1" autocomplete="off" checked> Add Chair
+    <div class="btn-group btn-group-toggle">
+        <label class="btn btn-secondary">
+            <input type="radio" name="options" class="add_mode" id="option1" autocomplete="off" value=true checked >
+            <i class="fa fa-check"></i> Add Chair Mode
         </label>
         <label class="btn btn-secondary">
-            <input type="radio" name="options" id="option2" autocomplete="off"> Mode 2
+            <input type="radio" name="options" class="add_mode" id="option2" value=false autocomplete="off">
+            <i class="fa fa-warning"></i> Mode 2
         </label>
     </div>
     {{#if addMode}}
@@ -109,5 +110,6 @@
         {{else}}
         Mode 2 active
     {{/if}}
+    {{> map}}
 
 </template>

@@ -65,18 +65,10 @@ Template.map.helpers({
 
 Template.mapMode.events({
     'change #option2'(event, instance) {
-        console.log("hi");
         instance.addModeActive.set(false);
-        console.log("Add mode :", Template.instance().addModeActive)
     },
     'change #option1'(event, instance) {
-        console.log("Add mode active");
         instance.addModeActive.set(true);
-        console.log("Add mode :", Template.instance().addModeActive)
     }
 });
 
-Template.map.onCreated(function mapModeOnCreated() {
-    var mapModeInstance = this.view.parentView.templateInstance();
-    this.addModeActive = mapModeInstance.addModeActive;
-});
