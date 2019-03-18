@@ -54,8 +54,7 @@
                 addMode = (addMode == 'true'); // Casting string to boolean
             }
             document.querySelectorAll('.add_mode').forEach( input => input.addEventListener('click', getAddMode) );
-            // Code to listen to a user interacting with a marker
-            map.data.addListener('click', function(event) {
+
                 // If the user already has an InfoWindow open, close it
                 //TODO: test this in more cases where the user closed the previous one manually
             google.maps.event.addListener(map, 'click', function(event) {
