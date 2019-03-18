@@ -53,13 +53,21 @@
                 // If the user already has an InfoWindow open, close it
                 //TODO: test this in more cases where the user closed the previous one manually
                 if(!!currentInfoWindow) { currentInfoWindow.close(); }
-                // InfoWindow of the point the user just clicked on
-                infowindow = event.feature.getProperty('infowindow');
-                currentInfoWindow = infowindow
-                // Location that InfoWindow is to be opened
-                currentOpenLoc = infowindow.getPosition();
-                // Open the InfoWindow
-                infowindow.open(map, event.latLang);
+				try {
+					// InfoWindow of the point the user just clicked on
+					infowindow = event.feature.getProperty('infowindow');
+					currentInfoWindow = infowindow;
+					// Location that InfoWindow is to be opened
+					currentOpenLoc = infowindow.getPosition();
+				} catch(err) {
+					console.log("ERROR! Could not obtain InfoWindow from event.feature; falling back on default contents.")
+					infowindow = new google.maps.InfoWindow({ content: dif, position: event.latLng });
+					currentInfoWindow = infowindow
+					// Location that InfoWindow is to be opened
+					currentOpenLoc = infowindow.getPosition();
+				}
+				// Open the InfoWindow
+				infowindow.open(map, event.latLang);
             });
             // Load each record in the `geojson` collection
             //TODO: We really should fix this to remove the blatant race condition
