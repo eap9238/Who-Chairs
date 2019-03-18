@@ -1,60 +1,34 @@
 <head>
-	<style>
-		#map {
-			overflow: visible;
-			height: 800px;
-			width: 100%;
-		}
-		*{
-    margin: 0;
-    padding: 0;
-		}
-		.rate:not(:checked) > input {
-		    position:absolute;
-		    top:-9999px;
-		}
-		.rate:not(:checked) > label {
-		    float:right;
-		    width:1em;
-		    overflow:hidden;
-		    white-space:nowrap;
-		    cursor:pointer;
-		    font-size:30px;
-		    color:#ccc;
-		}
-		.rate:not(:checked) > label:before {
-		    content: '★ ';
-		}
-		.rate > input:checked ~ label {
-		    color: #ffc700;
-		}
-		.rate:not(:checked) > label:hover,
-		.rate:not(:checked) > label:hover ~ label {
-		    color: #deb217;
-		}
-		.rate > input:checked + label:hover,
-		.rate > input:checked + label:hover ~ label,
-		.rate > input:checked ~ label:hover,
-		.rate > input:checked ~ label:hover ~ label,
-		.rate > label:hover ~ input:checked ~ label {
-		    color: #c59b08;
-		}
-	</style>
+    <!--TODO: Adjust this style to actually fit on the page, once the page's format is more finalized.-->
+    <style>
+        #map {
+            overflow: visible;
+            height: 800px;
+            width: 100%;
+        }
+    </style>
 </head>
 <template name="map">
     <div class="container" id="map"></div>
     <script>
-		// The map
-		var map;
+        // Connection to MongoDB is a global in main.js called map_points
+    
+        // The map
+        var map;
 
         // Default contents of a marker's InfoWindow
+        //TODO: add another button which calls something like deletePoint([id])
         var dif = "\
             <h3>Default contents</h3><br />\
             <img src=\"test.png\"></img><br />\
             <button type=\"button\" onclick=\"openEditWindow()\">Edit</button>\
             <button type=\"button\" onclick=\"openCommentWindow()\">Comment</button>\
         ";
-        //TODO: convert from php to AJAX to remove redirect
+        
+        // Form to handle submitting a new image, etc.
+        //TODO: look into just replacing the InfoWindow's contents (.setContents(...)) temporarily
+        //TODO: look into converting from php to AJAX to remove redirect
+        //TODO: set up to send data to the database via map_points.update(...) on id `marker._id`
         var editHTML = "\
             <form action=\"upload.php\" method=\"post\" enctype=\"multipart/form-data\">\
             Select image to upload:\
@@ -62,27 +36,9 @@
             <input type=\"submit\" value=\"Upload Image\" name=\"submit\">\
         </form>\
         ";
-        var commentHTML = "\
-						<div class=\"rate\">\
-								<input type=\"radio\" id=\"star5\" name=\"rate\" value=\"5\" />\
-								<label for=\"star5\" title=\"text\">5 stars</label>\
-								<input type=\"radio\" id=\"star4\" name=\"rate\" value=\"4\" />\
-								<label for=\"star4\" title=\"text\">4 stars</label>\
-								<input type=\"radio\" id=\"star3\" name=\"rate\" value=\"3\" />\
-								<label for=\"star3\" title=\"text\">3 stars</label>\
-								<input type=\"radio\" id=\"star2\" name=\"rate\" value=\"2\" />\
-								<label for=\"star2\" title=\"text\">2 stars</label>\
-								<input type=\"radio\" id=\"star1\" name=\"rate\" value=\"1\" />\
-								<label for=\"star1\" title=\"text\">1 star</label>\
-								<br>\
-		            <form action=\"upload.php\" method=\"post\" enctype\"multipart/form-data\">\
-		            Add a comment:\
-		            <input type=\"text\" name=\"comment\" id=\"comment\">\
-		            <br>\
-		            <input type=\"submit\" value=\"Submit Comment\" name=\"submit\">\
-		            </form>\
-						</div>"
-        var currentMarker;
+        
+        // Variables to keep track of which point the user is currently interacting with
+        var currentOpenLoc = null;
         var currentInfoWindow = null;
 
         // Initialize and add the map
@@ -91,16 +47,43 @@
             var rit = {lat: 43.084752, lng: -77.676251};
             // The map, centered at RIT
             map = new google.maps.Map(document.getElementById('map'), {zoom: 18, center: rit});
-            // A marker, positioned at the center of the starting window
-            var marker = new google.maps.Marker({position: rit, map: map});
             // Code to listen to a user adding a marker
-            google.maps.event.addListener(map, 'click', function(event) {
-                placeMarker(event.latLng);
+            google.maps.event.addListener(map, 'click', function(event) { placeMarker(event.latLng); });
+            // Code to listen to a user interacting with a marker
+            map.data.addListener('click', function(event) {
+                // If the user already has an InfoWindow open, close it
+                //TODO: test this in more cases where the user closed the previous one manually
+                if(!!currentInfoWindow) { currentInfoWindow.close(); }
+                // InfoWindow of the point the user just clicked on
+                infowindow = event.feature.getProperty('infowindow');
+                currentInfoWindow = infowindow
+                // Location that InfoWindow is to be opened
+                currentOpenLoc = infowindow.getPosition();
+                // Open the InfoWindow
+                infowindow.open(map, event.latLang);
             });
-            map.data.loadGeoJson('testdata.json', {}, function(features) {
-                //TODO: should we add listeners here?
+            // Load each record in the `geojson` collection
+            //TODO: We really should fix this to remove the blatant race condition
+            setTimeout(loadData, 1000);
+        }
+        
+        // Load the map point data from the database
+        function loadData() {
+            map_points.find().forEach((point) => {
+                // Basic map-compatible data structure
+                var data = {geometry: point.coordinates, infowindow: point.infowindow, _id: point._id};
+                // Parse the point's location from string to map-compatible LatLng
+                var latLngStr = data.geometry;
+                latLngStr = latLngStr.replace('(', '').split(',', 2);
+                var lat = parseFloat(latLngStr[0]);
+                var lng = parseFloat(latLngStr[1]);
+                data.geometry = new google.maps.LatLng(lat, lng);
+                // Add the point to the map
+                map.data.add(data);
             });
         }
+
+/*<<<<<<< HEAD
 		// Process an added marker
 		function placeMarker(location) {
 			// Create the marker
@@ -123,12 +106,29 @@
                 currentMarker = marker;
 			});
 		}
+=======*/
+        
+        // Process an added marker
+        function placeMarker(location) {
+            // Create the marker
+            var marker = map.data.add({geometry: new google.maps.Data.Point(location)});
+            marker.setProperty('infowindow', new google.maps.InfoWindow({ content: dif, position: location }));
+            // Save the marker to the database
+            response = map_points.insert({coordinates: location.toString(), infowindow: marker.getProperty('infowindow').content});
+            // The response to saving it is the marker's database ID, so add this info to the marker
+            marker.setProperty('_id', response);
+        }
+        
+        // Opens edit window - code to interact with the data at the point.
+        //TODO: reimplement this to behave without redirects, etc. (possibly look into using InfoWindow.setContents?)
+
         function openEditWindow() {
             currentInfoWindow.close();
             var editInfoWindow = new google.maps.InfoWindow({ content: editHTML });
-            editInfoWindow.open(map, currentMarker);
+            editInfoWindow.open(map, currentOpenLoc);
             editInfoWindow.addListener('closeclick', function() {
-                currentInfoWindow.open(map, currentMarker);
+                editInfoWindow.close()
+                currentInfoWindow.open(map, currentOpenLoc);
             });
         }
         function openCommentWindow() {
@@ -141,9 +141,8 @@
         }
 
     </script>
-	<!--TODO: Keeping the key here is EXTREMELY INSECURE. Fix this at the first available opportunity-->
-    <!--Note: this key is assigned to joekgamer@gmail.com (name "API key")-->
+    <!--TODO: Keeping the key here is EXTREMELY INSECURE. Fix this at the first available opportunity-->
     <script async defer
-	    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDaSdsYHPlZp1aGqKwTvObCvoR_L7M-Zqw&callback=initMap">
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDaSdsYHPlZp1aGqKwTvObCvoR_L7M-Zqw&callback=initMap">
     </script>
 </template>
