@@ -21,7 +21,8 @@
         var dif = "\
             <h3>Default contents</h3><br />\
             <img src=\"test.png\"></img><br />\
-            <button type=\"button\" onclick=\"openEditWindow()\">Edit</button>\
+            <button id=\"edit_button\" type=\"button\" onclick=\"openEditWindow()\">Edit</button>\
+			<button id=\"show_comments_button\" type=\"button\" onclick=\"showComments()\">Show Comments</button>\
         ";
         
         // Form to handle submitting a new image, etc.
@@ -39,6 +40,7 @@
         // Variables to keep track of which point the user is currently interacting with
         var currentOpenLoc = null;
         var currentInfoWindow = null;
+		var currentID = null;
 
         // Initialize and add the map
         function initMap() {
@@ -55,9 +57,11 @@
                 if(!!currentInfoWindow) { currentInfoWindow.close(); }
                 // InfoWindow of the point the user just clicked on
                 infowindow = event.feature.getProperty('infowindow');
-                currentInfoWindow = infowindow
+                currentInfoWindow = infowindow;
                 // Location that InfoWindow is to be opened
                 currentOpenLoc = infowindow.getPosition();
+				// ID the user just clicked on
+			currentID = map_points.find({ coordinates: currentOpenLoc }, { coordinates: 1 }});
                 // Open the InfoWindow
                 infowindow.open(map, event.latLang);
             });
@@ -87,8 +91,9 @@
             // Create the marker
             var marker = map.data.add({geometry: new google.maps.Data.Point(location)});
             marker.setProperty('infowindow', new google.maps.InfoWindow({ content: dif, position: location }));
+			marker.setProperty('comments', []);
             // Save the marker to the database
-            response = map_points.insert({coordinates: location.toString(), infowindow: marker.getProperty('infowindow').content});
+            response = map_points.insert({coordinates: location.toString(), infowindow: marker.getProperty('infowindow').content, comments: []});
             // The response to saving it is the marker's database ID, so add this info to the marker
             marker.setProperty('_id', response);
         }
@@ -104,6 +109,18 @@
                 currentInfoWindow.open(map, currentOpenLoc);
             });
         }
+		
+		// Add the comment section to the current InfoWindow
+		function showComments() {
+			// HTML block to add to the InfoWindow to access comments
+			var commentBlock = "<div>";
+			map_points.findOne({ _id: currentID }, { comments: 1});
+		}
+		
+		// Add a comment to the current InfoWindow
+		function addComment(toAdd) {
+			map_points.updateOne({ _id: currentID }, { $push: { comments: toAdd } });
+		}
     </script>
     <!--TODO: Keeping the key here is EXTREMELY INSECURE. Fix this at the first available opportunity-->
     <script async defer
