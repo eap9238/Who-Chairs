@@ -61,7 +61,7 @@
                 // Location that InfoWindow is to be opened
                 currentOpenLoc = infowindow.getPosition();
 				// ID the user just clicked on
-			currentID = map_points.find({ coordinates: currentOpenLoc }, { coordinates: 1 }});
+				currentID = map_points.find({ coordinates: currentOpenLoc.toString() }, { _id: 1 }).fetch()[0]._id;
                 // Open the InfoWindow
                 infowindow.open(map, event.latLang);
             });
@@ -91,9 +91,9 @@
             // Create the marker
             var marker = map.data.add({geometry: new google.maps.Data.Point(location)});
             marker.setProperty('infowindow', new google.maps.InfoWindow({ content: dif, position: location }));
-			marker.setProperty('comments', []);
+			marker.setProperty('comments', ["test comment 1", "test comment 2", "test comment 3"]);
             // Save the marker to the database
-            response = map_points.insert({coordinates: location.toString(), infowindow: marker.getProperty('infowindow').content, comments: []});
+            response = map_points.insert({coordinates: location.toString(), infowindow: marker.getProperty('infowindow').content, comments: ["test comment 1", "test comment 2", "test comment 3"]});
             // The response to saving it is the marker's database ID, so add this info to the marker
             marker.setProperty('_id', response);
         }
@@ -105,7 +105,7 @@
             var editInfoWindow = new google.maps.InfoWindow({ content: editHTML });
             editInfoWindow.open(map, currentOpenLoc);
             editInfoWindow.addListener('closeclick', function() {
-                editInfoWindow.close()
+                editInfoWindow.close();
                 currentInfoWindow.open(map, currentOpenLoc);
             });
         }
@@ -113,13 +113,20 @@
 		// Add the comment section to the current InfoWindow
 		function showComments() {
 			// HTML block to add to the InfoWindow to access comments
-			var commentBlock = "<div>";
-			map_points.findOne({ _id: currentID }, { comments: 1});
+			commentBlock = "<div>";
+			comments_from_db = map_points.find({ _id: currentID }, { comments: 1}).fetch()[0].comments;
+			console.log(comments_from_db);
+			for(comment in comments_from_db) {
+				commentBlock += "<p>" + comments_from_db[comment] + "</p>"
+			}
+			commentBlock += "</div><input type=\"text\" id=\"add_comment_field\"><button id=\"add_comment_button\" type=\"button\" onclick=\"addComment()\">Add Comment</button>"
+			currentInfoWindow.setContent(currentInfoWindow.getContent() + commentBlock);
 		}
 		
 		// Add a comment to the current InfoWindow
-		function addComment(toAdd) {
-			map_points.updateOne({ _id: currentID }, { $push: { comments: toAdd } });
+		function addComment() {
+			toAdd = document.getElementById("add_comment_field").value;
+			map_points.update({ _id: currentID }, { $push: { comments: toAdd } });
 		}
     </script>
     <!--TODO: Keeping the key here is EXTREMELY INSECURE. Fix this at the first available opportunity-->
