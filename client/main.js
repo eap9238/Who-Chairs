@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
+import { ReactiveDict } from 'meteor/reactive-dict';
 import { Accounts } from 'meteor/accounts-base';
 import { AccountsTemplates } from 'meteor/useraccounts:core'
 import { Mongo } from 'meteor/mongo';
@@ -27,4 +28,28 @@ Template.NavBar.events({
     }
 });
 
+Template.mapMode.onCreated(function mapModeOnCreated() {
+    this.addModeActive = new ReactiveVar(true);
+});
+
+Template.mapMode.helpers({
+    addMode() {
+        return Template.instance().addModeActive.get();
+    },
+});
+
+Template.map.helpers({
+    addMode(){
+        return Template.instance().addModeActive.get();
+    }
+});
+
+Template.mapMode.events({
+    'change #option2'(event, instance) {
+        instance.addModeActive.set(false);
+    },
+    'change #option1'(event, instance) {
+        instance.addModeActive.set(true);
+    }
+});
 
