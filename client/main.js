@@ -4,6 +4,9 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { Accounts } from 'meteor/accounts-base';
 import { AccountsTemplates } from 'meteor/useraccounts:core'
 import { Mongo } from 'meteor/mongo';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { chairReport } from './chair_report';
+import { Routes } from './Routes';
 
 map_points = new Mongo.Collection('map_points');
 
@@ -45,5 +48,3 @@ Template.NavBar.events({
         Meteor.logout();
     }
 });
-
-

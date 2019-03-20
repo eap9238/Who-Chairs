@@ -1,5 +1,5 @@
 <head>
-     <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-scope" content="profile email">
     <meta name="google-signin-client_id" content="963060634925-n06db9kgl9qculfbvfsdnm0r21hflquf.apps.googleusercontent.com">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://apis.google.com/js/platform.js" async defer></script>
@@ -29,9 +29,6 @@
   {{> NavBar }}
 
   <div class="container">
-  <h1>Welcome to Meteor!</h1>
-  {{> hello}}
-  {{> info}}
   {{> upload}}
   {{#if currentUser}}
   {{> map}}
@@ -42,7 +39,10 @@
 <template name="NavBar">
     <nav class="navbar navbar-expand-md navbar-light bg-light">
         <ul class=" nav navbar-nav navbar-right">
-        <li class="nav-item">
+        <li class="nav-item"></li>
+        <li><Link to='/chair_report'>Chair Report</Link></li>
+        <li><Link to='/'>Home</Link></li>
+        <li>
         {{#if currentUser}}
             {{ user.profile.name }} <img src="{{user.services.google.picture}}">
             <button class="logout btn navbar-btn">Sign Out</button>
@@ -60,20 +60,6 @@
         </li>
         </ul>
     </nav>
-</template>
-<template name="hello">
-  <button>Click Me</button>
-  <p>You've pressed the button {{counter}} times.</p>
-</template>
-
-<template name="info">
-  <h2>Learn Meteor!</h2>
-  <ul>
-    <li><a href="https://www.meteor.com/try" target="_blank">Do the Tutorial</a></li>
-    <li><a href="http://guide.meteor.com" target="_blank">Follow the Guide</a></li>
-    <li><a href="https://docs.meteor.com" target="_blank">Read the Docs</a></li>
-    <li><a href="https://forums.meteor.com" target="_blank">Discussions</a></li>
-  </ul>
 </template>
 
 <template name="upload">
