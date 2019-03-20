@@ -24,6 +24,7 @@
             <img src=\"test.png\"></img><br />\
             <button type=\"button\" onclick=\"openEditWindow()\">Edit</button>\
             <button type=\"button\" onclick=\"openCommentWindow()\">Comment</button>\
+            <button type=\"button\" onclick=\"markBroken()\">Mark as Broken</button>\
         ";
 
         // Form to handle submitting a new image, etc.
@@ -133,6 +134,10 @@
             editInfoWindow.addListener('closeclick', function() {
                 currentInfoWindow.open(map, currentMarker);
             });
+        }
+        function markBroken() {
+            alert("Thank you for marking this chair as broken.");
+            //map_points.update(...)
         }
 
     </script>
