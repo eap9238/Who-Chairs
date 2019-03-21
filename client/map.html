@@ -133,6 +133,7 @@
 		function addComment() {
 			toAdd = document.getElementById("add_comment_field").value;
 			map_points.update({ _id: currentID }, { $push: { comments: toAdd } });
+			showComments();
 		}
     </script>
     <!--TODO: Keeping the key here is EXTREMELY INSECURE. Fix this at the first available opportunity-->
