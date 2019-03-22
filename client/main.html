@@ -39,10 +39,7 @@
 <template name="NavBar">
     <nav class="navbar navbar-expand-md navbar-light bg-light">
         <ul class=" nav navbar-nav navbar-right">
-        <li class="nav-item"></li>
-        <li><Link to='/chair_report'>Chair Report</Link></li>
-        <li><Link to='/'>Home</Link></li>
-        <li>
+        <li class="nav-item">
         {{#if currentUser}}
             {{ user.profile.name }} <img src="{{user.services.google.picture}}">
             <button class="logout btn navbar-btn">Sign Out</button>
