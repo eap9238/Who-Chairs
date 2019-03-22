@@ -80,6 +80,8 @@
 					// Location that InfoWindow is to be opened
 					currentOpenLoc = infowindow.getPosition();
 				}
+                // ID the user just clicked on
+                currentID = map_points.find({ coordinates: currentOpenLoc.toString() }, { _id: 1 }).fetch()[0]._id;
 				// Open the InfoWindow
 				infowindow.open(map, event.latLang);
             });
@@ -137,7 +139,7 @@
         }
         function markBroken() {
             alert("Thank you for marking this chair as broken.");
-            //map_points.update(...)
+            map_points.update({ _id: currentID }, { $set: { broken: true } });
         }
 
     </script>
