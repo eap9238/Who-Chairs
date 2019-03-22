@@ -113,8 +113,9 @@
             var marker = map.data.add({geometry: new google.maps.Data.Point(location)});
             marker.setProperty('infowindow', new google.maps.InfoWindow({ content: dif, position: location }));
 			marker.setProperty('comments', ["test comment 1", "test comment 2", "test comment 3"]);
+			marker.setProperty('image', "http://icons.iconarchive.com/icons/ccard3dev/dynamic-yosemite/128/Preview-icon.png");
             // Save the marker to the database
-            response = map_points.insert({coordinates: location.toString(), infowindow: marker.getProperty('infowindow').content, comments: ["test comment 1", "test comment 2", "test comment 3"]});
+            response = map_points.insert({coordinates: location.toString(), infowindow: marker.getProperty('infowindow').content, image: "http://icons.iconarchive.com/icons/ccard3dev/dynamic-yosemite/128/Preview-icon.png", comments: ["test comment 1", "test comment 2", "test comment 3"]});
             // The response to saving it is the marker's database ID, so add this info to the marker
             marker.setProperty('_id', response);
         }
@@ -130,7 +131,7 @@
                 editInfoWindow.close();
                 currentInfoWindow.open(map, currentOpenLoc);
             });
-        }
+        }        
 		
 		// Add the comment section to the current InfoWindow
 		oldInfoWindowContent = null;
