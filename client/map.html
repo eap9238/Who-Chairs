@@ -133,6 +133,7 @@
         }
 		
 		// Add the comment section to the current InfoWindow
+		oldInfoWindowContent = null;
 		function showComments() {
 			// HTML block to add to the InfoWindow to access comments
 			commentBlock = "<div>";
@@ -142,6 +143,7 @@
 				commentBlock += "<p>" + comments_from_db[comment] + "</p>"
 			}
 			commentBlock += "</div><input type=\"text\" id=\"add_comment_field\"><button id=\"add_comment_button\" type=\"button\" onclick=\"addComment()\">Add Comment</button>"
+			oldInfoWindowContent = currentInfoWindow.getContent();
 			currentInfoWindow.setContent(currentInfoWindow.getContent() + commentBlock);
 		}
 		
@@ -149,6 +151,7 @@
 		function addComment() {
 			toAdd = document.getElementById("add_comment_field").value;
 			map_points.update({ _id: currentID }, { $push: { comments: toAdd } });
+			currentInfoWindow.setContent(oldInfoWindowContent);
 			showComments();
 		}
 		
