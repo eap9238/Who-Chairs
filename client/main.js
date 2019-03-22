@@ -5,11 +5,13 @@ import { ReactiveDict } from 'meteor/reactive-dict';
 import { Accounts } from 'meteor/accounts-base';
 import { AccountsTemplates } from 'meteor/useraccounts:core'
 import { Mongo } from 'meteor/mongo';
+import { chairReport } from './chair_report';
 
 map_points = new Mongo.Collection('map_points');
 
 import './main.html';
 import './map.html';
+import 'bootstrap/dist/css/bootstrap.css';
 
 Template.NavBar.helpers({
     user (){
@@ -52,3 +54,12 @@ Template.mapMode.events({
         instance.addModeActive.set(true);
     }
 });
+
+Template.chair_report.events({
+  toggle() {
+    modal.this.setState.set(true);
+  }
+  handleSubmit(event) {
+    this.setState.({name: event.target.value});
+  }
+})
