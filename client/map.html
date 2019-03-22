@@ -23,6 +23,8 @@
             <h3>Default contents</h3><br />\
             <img src=\"test.png\"></img><br />\
             <button type=\"button\" onclick=\"openEditWindow()\">Edit</button>\
+            <button type=\"button\" onclick=\"openCommentWindow()\">Comment</button>\
+            <button type=\"button\" onclick=\"markBroken()\">Mark as Broken</button>\
         ";
 
         // Form to handle submitting a new image, etc.
@@ -34,7 +36,7 @@
             Select image to upload:\
             <input type=\"file\" name=\"fileToUpload\" id=\"fileToUpload\">\
             <input type=\"submit\" value=\"Upload Image\" name=\"submit\">\
-            </form>\
+        </form>\
         ";
 
         // Variables to keep track of which point the user is currently interacting with
@@ -78,6 +80,8 @@
 					// Location that InfoWindow is to be opened
 					currentOpenLoc = infowindow.getPosition();
 				}
+                // ID the user just clicked on
+                currentID = map_points.find({ coordinates: currentOpenLoc.toString() }, { _id: 1 }).fetch()[0]._id;
 				// Open the InfoWindow
 				infowindow.open(map, event.latLang);
             });
@@ -115,6 +119,7 @@
 
         // Opens edit window - code to interact with the data at the point.
         //TODO: reimplement this to behave without redirects, etc. (possibly look into using InfoWindow.setContents?)
+
         function openEditWindow() {
             currentInfoWindow.close();
             var editInfoWindow = new google.maps.InfoWindow({ content: editHTML });
@@ -124,6 +129,19 @@
                 currentInfoWindow.open(map, currentOpenLoc);
             });
         }
+        function openCommentWindow() {
+            currentInfoWindow.close();
+            var editInfoWindow = new google.maps.InfoWindow({ content: commentHTML });
+            editInfoWindow.open(map, currentMarker);
+            editInfoWindow.addListener('closeclick', function() {
+                currentInfoWindow.open(map, currentMarker);
+            });
+        }
+        function markBroken() {
+            alert("Thank you for marking this chair as broken.");
+            map_points.update({ _id: currentID }, { $set: { broken: true } });
+        }
+
     </script>
     <!--TODO: Keeping the key here is EXTREMELY INSECURE. Fix this at the first available opportunity-->
     <script async defer
