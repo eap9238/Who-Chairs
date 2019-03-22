@@ -23,7 +23,7 @@
             <h3>Default contents</h3><br />\
             <img src=\"test.png\"></img><br />\
             <button id=\"edit_button\" type=\"button\" onclick=\"openEditWindow()\">Edit</button>\
-            <button id=\"show_comments_button\" type=\"button\" onclick=\"openCommentWindow()\">Comment</button>\
+			<button id=\"show_comments_button\" type=\"button\" onclick=\"showComments()\">Show Comments</button>\
             <button id=\"mark_broken_button\" type=\"button\" onclick=\"markBroken()\">Mark as Broken</button>\
         ";
 
@@ -151,6 +151,7 @@
 			map_points.update({ _id: currentID }, { $push: { comments: toAdd } });
 			showComments();
 		}
+		
         function markBroken() {
             alert("Thank you for marking this chair as broken.");
             map_points.update({ _id: currentID }, { $set: { broken: true } });
