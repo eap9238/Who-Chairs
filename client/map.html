@@ -137,23 +137,23 @@
 		oldInfoWindowContent = null;
 		function showImage() {
 			// HTML block to add to the InfoWindow to access comments
-			commentBlock = "<div>";
-			comments_from_db = map_points.find({ _id: currentID }, { comments: 1}).fetch()[0].comments;
-			console.log(comments_from_db);
-			for(comment in comments_from_db) {
-				commentBlock += "<p>" + comments_from_db[comment] + "</p>"
+			imageBlock = "<div>";
+			images_from_db = map_points.find({ _id: currentID }, { comments: 1}).fetch()[0].comments;
+			console.log(images_from_db);
+			for(image in images_from_db) {
+				imageBlock += "<p>" + images_from_db[image] + "</p>"
 			}
-			commentBlock += "</div><input type=\"text\" id=\"add_comment_field\"><button id=\"add_comment_button\" type=\"button\" onclick=\"addComment()\">Add Comment</button>"
+			imageBlock += "</div><input type=\"file\" id=\"add_image_field\"><button id=\"add_image_button\" type=\"button\" onclick=\"addImage()\">Add Image</button>"
 			oldInfoWindowContent = currentInfoWindow.getContent();
 			currentInfoWindow.setContent(currentInfoWindow.getContent() + commentBlock);
 		}
 		
 		// Add a comment to the current InfoWindow
 		function addImage() {
-			toAdd = document.getElementById("add_comment_field").value;
-			map_points.update({ _id: currentID }, { $push: { comments: toAdd } });
+			toAdd = document.getElementById("add_image_field").value;
+			map_points.update({ _id: currentID }, { $push: { images: toAdd } });
 			currentInfoWindow.setContent(oldInfoWindowContent);
-			showComments();
+			showImage();
 		}        
 		
 		// Add the comment section to the current InfoWindow
