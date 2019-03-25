@@ -138,11 +138,10 @@
 		function showImage() {
 			// HTML block to add to the InfoWindow to access comments
 			imageBlock = "<div>";
-			images_from_db = map_points.find({ _id: currentID }, { comments: 1}).fetch()[0].comments;
-			console.log(images_from_db);
-			for(image in images_from_db) {
-				imageBlock += "<p>" + images_from_db[image] + "</p>"
-			}
+            
+			image_from_db = map_points.find({ _id: currentID }, { images: 1}).fetch()[0].images;
+			console.log(image_from_db);
+            
 			imageBlock += "</div><input type=\"file\" id=\"add_image_field\"><button id=\"add_image_button\" type=\"button\" onclick=\"addImage()\">Add Image</button>"
 			oldInfoWindowContent = currentInfoWindow.getContent();
 			currentInfoWindow.setContent(currentInfoWindow.getContent() + imageBlock);
@@ -151,7 +150,7 @@
 		// Add a comment to the current InfoWindow
 		function addImage() {
 			toAdd = document.getElementById("add_image_field").value;
-			map_points.update({ _id: currentID }, { $push: { images: toAdd } });
+			map_points.update({ _id: currentID }, { $push: { image: toAdd } });
 			currentInfoWindow.setContent(oldInfoWindowContent);
 			showImage();
 		}        
