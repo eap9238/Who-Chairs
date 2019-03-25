@@ -150,7 +150,7 @@
 		// Add a comment to the current InfoWindow
 		function addImage() {
 			toAdd = document.getElementById("add_image_field").value;
-			map_points.update({ _id: currentID }, { $push: { image: toAdd } });
+			map_points.update({ _id: currentID }, { $set: { image: toAdd } });
 			currentInfoWindow.setContent(oldInfoWindowContent);
 			showImage();
 		}        
