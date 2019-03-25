@@ -139,8 +139,8 @@
 			// HTML block to add to the InfoWindow to access comments
 			imageBlock = "<div>";
             
-            console.log(map_points.find({ _id: currentID }, { image: 1 }));
-			image_from_db = map_points.find({ _id: currentID }, { image: 1 });
+            console.log(map_points.find({ _id: currentID }, { image: 1 }).fetch()[0]);
+			image_from_db = map_points.find({ _id: currentID }, { image: 1 }).fetch()[0];
             //.fetch()[0].image
             
 			imageBlock += "<img src=\"" + image_from_db + "\"></img>";
