@@ -22,7 +22,7 @@
         var dif = "\
             <h3>Default contents</h3><br />\
             <img src=\"http://icons.iconarchive.com/icons/ccard3dev/dynamic-yosemite/128/Preview-icon.png\"></img><br />\
-            <button id=\"edit_button\" type=\"button\" onclick=\"openEditWindow()\">Edit</button>\
+            <button id=\"edit_button\" type=\"button\" onclick=\"showImage()\">Upload Image</button>\
 			<button id=\"show_comments_button\" type=\"button\" onclick=\"showComments()\">Show Comments</button>\
             <button id=\"mark_broken_button\" type=\"button\" onclick=\"markBroken()\">Mark as Broken</button>\
         ";
@@ -132,6 +132,29 @@
                 currentInfoWindow.open(map, currentOpenLoc);
             });
         }        
+		
+		// Add the comment section to the current InfoWindow
+		oldInfoWindowContent = null;
+		function showImage() {
+			// HTML block to add to the InfoWindow to access comments
+			commentBlock = "<div>";
+			comments_from_db = map_points.find({ _id: currentID }, { comments: 1}).fetch()[0].comments;
+			console.log(comments_from_db);
+			for(comment in comments_from_db) {
+				commentBlock += "<p>" + comments_from_db[comment] + "</p>"
+			}
+			commentBlock += "</div><input type=\"text\" id=\"add_comment_field\"><button id=\"add_comment_button\" type=\"button\" onclick=\"addComment()\">Add Comment</button>"
+			oldInfoWindowContent = currentInfoWindow.getContent();
+			currentInfoWindow.setContent(currentInfoWindow.getContent() + commentBlock);
+		}
+		
+		// Add a comment to the current InfoWindow
+		function addImage() {
+			toAdd = document.getElementById("add_comment_field").value;
+			map_points.update({ _id: currentID }, { $push: { comments: toAdd } });
+			currentInfoWindow.setContent(oldInfoWindowContent);
+			showComments();
+		}        
 		
 		// Add the comment section to the current InfoWindow
 		oldInfoWindowContent = null;
