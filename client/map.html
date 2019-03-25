@@ -140,7 +140,7 @@
 			imageBlock = "<div>";
             
             console.log(map_points.find({ _id: currentID }, { image }));
-			image_from_db = map_points.find({ _id: currentID }, { image });
+			image_from_db = map_points.find({ _id: currentID }, { image: 1 });
             //.fetch()[0].image
             
 			imageBlock += "<img src=\"" + image_from_db + "\"></img>";
