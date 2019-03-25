@@ -140,11 +140,10 @@
 			imageBlock = "<div>";
             
 			image_from_db = map_points.find({ _id: currentID }, { image }).fetch()[0].image;
-			console.log(image_from_db);
             
-			//imageBlock += "</div><input type=\"file\" id=\"add_image_field\"><button id=\"add_image_button\" type=\"button\" onclick=\"addImage()\">Add Image</button>"
+			imageBlock += "<img src=\"" + image_from_db + "\"></img>");
             
-            console.log("Info window: " + currentInfoWindow.getContent());
+			imageBlock += "</div><input type=\"file\" id=\"add_image_field\"><button id=\"add_image_button\" type=\"button\" onclick=\"addImage()\">Add Image</button>"
             
 			oldInfoWindowContent = currentInfoWindow.getContent();
 			currentInfoWindow.setContent(currentInfoWindow.getContent() + imageBlock);
